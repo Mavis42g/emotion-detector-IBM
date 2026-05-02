@@ -2,19 +2,6 @@ import json
 import sys
 import requests
 
-
-def format_emotion_output(result):
-    return (
-        "{\n"
-        f"'anger': {result['anger']},\n"
-        f"'disgust': {result['disgust']},\n"
-        f"'fear': {result['fear']},\n"
-        f"'joy': {result['joy']},\n"
-        f"'sadness': {result['sadness']},\n"
-        f"'dominant_emotion': '{result['dominant_emotion']}'\n"
-        "}"
-    )
-
 def emotion_detector(text_to_analyze):
     url = 'https://sn-watson-emotion.labs.skills.network/v1/watson.runtime.nlp.v1/NlpService/EmotionPredict'
     headers = {"grpc-metadata-mm-model-id": "emotion_aggregated-workflow_lang_en_stock"}
@@ -36,9 +23,19 @@ def emotion_detector(text_to_analyze):
     }
 
     result["dominant_emotion"] = max(result, key=result.get)
-    return result
+
+    return (
+        "{\n"
+        f"'anger': {result['anger']},\n"
+        f"'disgust': {result['disgust']},\n"
+        f"'fear': {result['fear']},\n"
+        f"'joy': {result['joy']},\n"
+        f"'sadness': {result['sadness']},\n"
+        f"'dominant_emotion': '{result['dominant_emotion']}'\n"
+        "}"
+    )
 
 if __name__ == "__main__":
     text = sys.argv[1]
     result = emotion_detector(text)
-    print(format_emotion_output(result))
+    print(result)
